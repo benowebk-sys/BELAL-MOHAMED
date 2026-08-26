@@ -39,10 +39,16 @@ $$('.work-row').forEach(row=>{
     preview.src=src;
   };
   const hide=()=>preview.classList.remove('show');
+  const showOnClick=event=>{
+    event.preventDefault();
+    show();
+    document.querySelector('.work-preview')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
   row.addEventListener('mouseenter',show);
   row.addEventListener('mouseleave',hide);
   row.addEventListener('focus',show);
   row.addEventListener('blur',hide);
+  row.addEventListener('click',showOnClick);
 });
 
 const cursor=$('#cursor');

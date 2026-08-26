@@ -88,3 +88,13 @@
 		font-size: 13px;
 	}
 }
+
+@media(max-width:760px) {
+	.work-preview {
+		display: block;
+		position: relative;
+		top: auto;
+		height: min(72vw, 430px);
+		margin-top: 24px;
+	}
+}
