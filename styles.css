@@ -98,3 +98,11 @@
 		margin-top: 24px;
 	}
 }
+
+@media(max-width:760px) {
+	.hero-portrait-wrap {
+		left: 0;
+		width: 100vw;
+		transform: none;
+	}
+}
