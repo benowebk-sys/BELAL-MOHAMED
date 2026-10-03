@@ -951,7 +951,7 @@ body.scrolled .topbar {
 
 .skill-row small {
   color: var(--muted);
-  font: 500 9px/1.6 var(--mono);
+  font: 500 12px/1.6 var(--mono);
   letter-spacing: .025em;
   text-align: right;
 }
