@@ -74,7 +74,12 @@ const selectProject=row=>{
   previewCard.classList.remove('has-image');
   previewCard.style.minHeight='';
   preview.classList.remove('show');
-  previewLink.hidden=true;
+  previewLink.hidden=!link;
+  if(link){
+    previewLink.href=link;
+  }else{
+    previewLink.removeAttribute('href');
+  }
   previewPlaceholder.hidden=false;
   preview.alt=`Preview of ${row.querySelector('h3').textContent}`;
   preview.onload=()=>{
@@ -82,18 +87,12 @@ const selectProject=row=>{
     previewCard.style.minHeight='0';
     preview.classList.add('show');
     previewPlaceholder.hidden=true;
-    if(link){
-      previewLink.href=link;
-      previewLink.hidden=false;
-    }else{
-      previewLink.removeAttribute('href');
-    }
   };
   preview.onerror=()=>{
     previewCard.classList.remove('has-image');
     previewCard.style.minHeight='';
     preview.classList.remove('show');
-    previewLink.hidden=true;
+    previewLink.hidden=!link;
     previewPlaceholder.hidden=false;
   };
   preview.src=image;
@@ -106,6 +105,55 @@ $$('.work-row').forEach(row=>{
     document.querySelector('.work-preview')?.scrollIntoView({behavior:'smooth',block:'nearest'});
   });
 });
+
+const requestForm=$('#requestForm');
+if(requestForm){
+  const requestSubmit=requestForm.querySelector('.request-submit');
+  const requestStatus=$('#requestStatus');
+
+  requestForm.addEventListener('submit',async event=>{
+    event.preventDefault();
+    requestSubmit.disabled=true;
+    requestStatus.dataset.state='';
+    requestStatus.textContent='SENDING YOUR REQUEST...';
+
+    let response;
+    try{
+      response=await fetch('/api/request',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(Object.fromEntries(new FormData(requestForm)))
+      });
+    }catch{
+      requestStatus.dataset.state='error';
+      requestStatus.textContent='Unable to connect. Please try again in a moment.';
+      requestSubmit.disabled=false;
+      return;
+    }
+
+    let result;
+    try{
+      result=await response.json();
+    }catch{
+      requestStatus.dataset.state='error';
+      requestStatus.textContent='The request could not be processed. Please try again later.';
+      requestSubmit.disabled=false;
+      return;
+    }
+
+    if(!response.ok){
+      requestStatus.dataset.state='error';
+      requestStatus.textContent=result.error||'The request could not be sent. Please try again.';
+      requestSubmit.disabled=false;
+      return;
+    }
+
+    requestForm.reset();
+    requestStatus.dataset.state='success';
+    requestStatus.textContent='Your request was sent successfully. Thank you!';
+    requestSubmit.disabled=false;
+  });
+}
 
 const io=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
