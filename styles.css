@@ -1990,6 +1990,7 @@ body.scrolled .topbar {
 
 .hero-portrait {
   filter: drop-shadow(0 24px 40px rgb(0 0 0 / 38%));
+  transform: translateY(-41px);
 }
 
 .section {
